@@ -42,7 +42,7 @@ func main() {
 	}
 
 	fmt.Println("Starting the TCP server...")
-	go manager.Listen()
+	manager.Listen()
 	//go client_manager.StartTCPServer()
 
 	// Define HTTP handlers

@@ -9,9 +9,13 @@ import (
 	"github.com/mbsoft31/screens/models"
 )
 
+type Ctx string
+
+const CtxDb Ctx = "db"
+
 // Helper function to retrieve the database from context
 func getDB(r *http.Request) *gorm.DB {
-	return r.Context().Value("db").(*gorm.DB)
+	return r.Context().Value(CtxDb).(*gorm.DB)
 }
 
 // ScreensHandler handles GET and POST requests for screens
@@ -61,7 +65,11 @@ func GetScreens(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(screens)
+	err := json.NewEncoder(w).Encode(screens)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }
 
 // CreateScreen creates a new screen
@@ -80,7 +88,11 @@ func CreateScreen(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(screen)
+	err := json.NewEncoder(w).Encode(screen)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }
 
 // GetPlaylists fetches all playlists
@@ -94,7 +106,11 @@ func GetPlaylists(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(playlists)
+	err := json.NewEncoder(w).Encode(playlists)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }
 
 // CreatePlaylist creates a new playlist
@@ -113,7 +129,11 @@ func CreatePlaylist(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(playlist)
+	err := json.NewEncoder(w).Encode(playlist)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }
 
 // GetUsers fetches all users
@@ -127,7 +147,11 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(users)
+	err := json.NewEncoder(w).Encode(users)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }
 
 // CreateUser creates a new user
@@ -146,5 +170,9 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(user)
+	err := json.NewEncoder(w).Encode(user)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }

@@ -148,8 +148,8 @@ func isValidClientID(id string) bool {
 }
 
 func (cm *ClientManager) HandlePlaylistUpdate(clientID string, conn net.Conn) {
-	cm.Mutex.Lock()
-	defer cm.Mutex.Unlock()
+	/*cm.Mutex.Lock()
+	defer cm.Mutex.Unlock()*/
 	fmt.Printf("tttttttttttttt")
 
 	// Fetch the current playlist for the client
@@ -162,13 +162,16 @@ func (cm *ClientManager) HandlePlaylistUpdate(clientID string, conn net.Conn) {
 		return
 	}
 
-	fmt.Printf("Found playlist for client %s\n", clientID)
+	fmt.Printf("Found playlist for client %s, {%v}\n", clientID, currentPlaylist)
 
 	// Calculate a hash of the current playlist
 	newVersionHash := calculateHash(currentPlaylist)
 
+	fmt.Printf("New version hash: %s\n", newVersionHash)
+	fmt.Printf("Version hash: %s\n", cm.PlaylistVersions[clientID].VersionHash)
 	// Check if the playlist has changed
 	if cm.PlaylistVersions[clientID].VersionHash == newVersionHash {
+		fmt.Println("Skipped update")
 		return // No changes, skip update
 	}
 
@@ -185,6 +188,7 @@ func (cm *ClientManager) HandlePlaylistUpdate(clientID string, conn net.Conn) {
 	}
 
 	response := append(data, '\n')
+	fmt.Printf("Sending data to client: %s", response)
 	if _, err := conn.Write(response); err != nil {
 		fmt.Println("Error sending updated playlist to client:", err)
 	}

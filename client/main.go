@@ -34,12 +34,16 @@ func main() {
 			break
 		}
 
+		fmt.Println("Client ID: ", clientID)
+
 		// Read playlist data from server
 		data, err := io.ReadAll(conn)
 		if err != nil {
 			fmt.Println("Error reading data from server:", err)
 			break
 		}
+
+		fmt.Printf("Received data: %s\n", string(data))
 
 		var playlist models.Playlist
 		if err := json.Unmarshal(data, &playlist); err != nil {
